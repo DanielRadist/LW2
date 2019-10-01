@@ -17,6 +17,7 @@ class Student
 
 public:	
 	#define N 3												//кол-во предметов у ученика
+	#define M 50
 
 	Student()
 	{
@@ -29,6 +30,9 @@ public:
 
 	void init()												//инициал. ученика
 	{
+		cout << "Enter name student: ";
+		cin.getline(name, M);
+
 		for(int i = 0; i < N; i++)
 		{
 			int hours;										//часы в неделю
@@ -52,12 +56,17 @@ public:
 				cout << " ~ Enter point: ";
 				cin >> point;
 			} while(point < 0);
+
+			while(cin.get() != '\n');
+
 			points[i].read(point);
 		}
+
 	}
 
 	void display()											//вывод инф. по ученику
 	{
+		cout << "Student: " << name << endl;
 		cout << "Number of subjects: " << N << endl;
 
 		for(int i = 0; i < N; i++)
@@ -129,12 +138,12 @@ private:
 
 	public:
 
-		int get()									//получить балл по индексу
+		int get()											//получить балл по индексу
 		{
 			return point;
 		}
 
-		void read(int val)						//записать балл по индексу
+		void read(int val)									//записать балл по индексу
 		{
 			point = val;
 		}
@@ -143,6 +152,7 @@ private:
 		int point;
 	};
 
+	char name[M];
 	Point points[N];
 	Discipline subjects[N];									//указатель на массив объектов-предмет
 };
