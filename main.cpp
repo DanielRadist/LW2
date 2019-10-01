@@ -1,10 +1,6 @@
 ﻿/* @autor Rakhmanin Danila aka Radist AltSTU PI-82
  *
- * Предмет имеет целое – число часов в неделю и целое – трудоемкость предмета (коэффициент 1-10).
- * Определить метод, вычисляющий вес предмета в рейтинге учащегося, равный число часов/8 * трудоемкость/10.
- * Основной класса – ученик с тремя полями предметов и количеством баллов по каждому предмету.
- * Реализовать метод, вычисляющий средний рейтинг ученика, равный сумме произведений балл по предмету на его вес и метод,
- * определяющий предмет с максимальным весом в рейтинге.
+ *
  *
  */
 
@@ -12,125 +8,172 @@
 
 using namespace std;
 
-class Student
+class Dish
 {
+public:
+#define N 50
 
-public:	
-	#define N 3												//кол-во предметов у ученика
-
-	Student()
+	Dish(int size = 2)
 	{
+		if(size < 2)
+			size = 2;
+
+		foods = new Food[size];
+		size_dish = size;
 		init();
 	}
-	~Student()
+	~Dish()
 	{
-
+		delete [] foods;
 	}
 
-	void init()												//инициал. ученика
+	void init()											//иниц. блюда
 	{
-		for(int i = 0; i < N; i++)
-		{
-			int hours;										//часы в неделю
-			int complexity;									//трудоемкость предмета (коэффициент 1-10)
-			int point;										//балл
+		cin.clear();
+		cout << "Enter name dish: ";
+		cin.getline(name, N);
 
-			cout << "Subject #" << i + 1 << endl;
-			do {
-				cout << " ~ Enter complexity: ";
-				cin >> complexity;
-			} while(complexity > 10 || complexity < 1);
-
-			do {
-				cout << " ~ Enter hours: ";
-				cin >> hours;
-			} while(hours < 0);
-
-			subjects[i].init(complexity, hours);
-
-			do {
-				cout << " ~ Enter point: ";
-				cin >> point;
-			} while(point < 0);
-			points[i] = point;
-		}
+		for(int i = 0; i < size_dish; i++)
+			foods[i].init();
 	}
 
-	void display()											//вывод инф. по ученику
+	void display()										//вывод имени блюда и вызов дисплея еды
 	{
-		cout << "Number of subjects: " << N << endl;
-
-		for(int i = 0; i < N; i++)
-		{
-			cout << i + 1 <<") ";
-			subjects[i].display();
-			cout << "point: " << points[i] << "; ";
-			cout << endl;
-		}
+		cout << "Dish: " << name << endl;
+		for(int i = 0; i < size_dish; i++)
+			foods[i].display();
 	}
 
-	float status()											//возр. средний рейтинг ученика
+	void toSalt()										//посолить еду
 	{
-		float tmp = 0;
-		for(int i = 0; i < N; i++)
-			tmp += points[i] * subjects[i].discipline_weight();
-		return tmp;
+		for(int i = 0; i < size_dish; i++)
+			foods[i].toSalt();
 	}
 
-	int max_discipline_weight()								//возр. индекс на предмет с макс. рейтингом
+	void assessmentDish()								//оценка блюда
 	{
-		float tmp = subjects[0].discipline_weight();
-		int tmp_p = 0;										//индекс указывающий на предмет с макс. весом
-		for(int i = 1; i < N; i++)
-		{
-			if(tmp < subjects[i].discipline_weight())
-			{
-				tmp = subjects[i].discipline_weight();
-				tmp_p = i;
-			}
-		}
-		return tmp_p;
+		int taste = 0;									//вкус
+		int appearance = 0;								//внешний вид
+		int satiety = 0;								//сытность
+		int salt = 0;									//солёность
+
+		for(int i = 0; i < size_dish; i++)
+			taste += foods->getTaste();
+		taste /= size_dish;
+
+		for(int i = 0; i < size_dish; i++)
+			appearance += foods->getAppearance();
+		appearance /= size_dish;
+
+		for(int i = 0; i < size_dish; i++)
+			satiety += foods->getSatiety();
+
+		for(int i = 0; i < size_dish; i++)
+			salt += foods->getSalt();
+		salt /= size_dish;
+
+		cout << "Dish: " << name << endl;
+		cout << " ~ taste dish: " << taste << endl;
+		cout << " ~ appearance dish: " << appearance << endl;
+		cout << " ~ satiety dish: " << satiety << endl;
+		cout << " ~ salt dish: " << salt << endl;
+
 	}
 
 private:
 
-	class Discipline
+	class Food											//класс вкус
 	{
 	public:
 
-		float discipline_weight()							//вес предмета в рейтинге
+		void init()										//иниц. еды
 		{
-			return (float(hours * complexity) / 80);
+			cin.clear();
+			cout << " ~ Enter name food: ";
+			cin.getline(name, N);
+
+			do {
+				cout << " ~  ~ Enter taste: ";
+				cin >> taste;
+			} while(taste < 1 || taste > 10);
+
+			do {
+				cout << " ~  ~ Enter appearance: ";
+				cin >> appearance;
+			} while(appearance < 1 || appearance > 10);
+
+			do {
+				cout << " ~  ~ Enter satiety: ";
+				cin >> satiety;
+			} while(satiety < 1 || satiety > 10);
+
+			while(cin.get() != '\n');
+
+			salt = 1;
 		}
 
-		void init(int complexity, int hours)				//инициализация передмета
+		void display()									//вывод еды
 		{
-			this->complexity = complexity;
-			this->hours = hours;
+			cout << " ~ Food: " << name << endl;
+			cout << " ~  ~ taste: " << taste << endl;
+			cout << " ~  ~ appearance: " << appearance << endl;
+			cout << " ~  ~ satiety: " << satiety << endl;
+			cout << " ~  ~ salt: " << salt << endl;
 		}
 
-		void display()										//вывод информации по предмету
+		void toSalt()									//"сложная" технология соления
 		{
-			cout << "complexity: " << complexity << "; hours: " << hours << "; ";
+			salt++;
+			if(salt > 10)
+			{
+				salt = 10;
+			} else if(salt > 4)
+			{
+				taste = taste / 2;
+			}
 		}
 
+		int getTaste()
+		{
+			return taste;
+		}
+
+		int getAppearance()
+		{
+			return appearance;
+		}
+
+		int getSatiety()
+		{
+			return satiety;
+		}
+
+		int getSalt()
+		{
+			return salt;
+		}
 	private:
 
-		int complexity;										//трудоемкость предмета (коэффициент 1-10)
-		int hours;											//часы в неделю
+		char name[N];									//имя еды
+		int taste;										//вкус
+		int appearance;									//внешний вид
+		int satiety;									//сытность
+		int salt;										//солёность
+
 	};
 
-	int points[N];											//баллы по предметам
-	Discipline subjects[N];									//указатель на массив объектов-предмет
+	char name[N];										//имя блюда
+	Food *foods;
+	int size_dish;										//кол-во объектов класса Food в Dish
 };
 
 int main()
 {
-	Student Oleg;
-	Oleg.display();
 
-	cout << "Student rating: " << Oleg.status() << "; the heaviest subject: " << Oleg.max_discipline_weight() + 1 << "; " << endl;
-
+	Dish q;
+	q.display();
+	cout << endl;
+	q.assessmentDish();
 
 	return 0;
 }
