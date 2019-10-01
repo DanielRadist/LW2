@@ -69,13 +69,36 @@ public:
 		}
 	}
 
+	float status()											//возр. средний рейтинг ученика
+	{
+		float tmp = 0;
+		for(int i = 0; i < N; i++)
+			tmp += points[i] * subjects[i].discipline_weight();
+		return tmp;
+	}
+
+	int max_discipline_weight()								//возр. индекс на предмет с макс. рейтингом
+	{
+		float tmp = subjects[0].discipline_weight();
+		int tmp_p = 0;										//индекс указывающий на предмет с макс. весом
+		for(int i = 1; i < N; i++)
+		{
+			if(tmp < subjects[i].discipline_weight())
+			{
+				tmp = subjects[i].discipline_weight();
+				tmp_p = i;
+			}
+		}
+		return tmp_p;
+	}
+
 private:
 
 	class Discipline
 	{
 	public:
 
-		float discipline_weight(int hours, int complexity)	//вес предмета в рейтинге
+		float discipline_weight()							//вес предмета в рейтинге
 		{
 			return (float(hours * complexity) / 80);
 		}
@@ -103,9 +126,10 @@ private:
 
 int main()
 {
-	Student q;
-	q.display();
-	//Student::subject_pattern sub;
+	Student Oleg;
+	Oleg.display();
+
+	cout << "Student rating: " << Oleg.status() << "; the heaviest subject: " << Oleg.max_discipline_weight() + 1 << "; " << endl;
 
 
 	return 0;
