@@ -52,7 +52,7 @@ public:
 				cout << " ~ Enter point: ";
 				cin >> point;
 			} while(point < 0);
-			points[i] = point;
+			points[i].read(point);
 		}
 	}
 
@@ -64,7 +64,7 @@ public:
 		{
 			cout << i + 1 <<") ";
 			subjects[i].display();
-			cout << "point: " << points[i] << "; ";
+			cout << "point: " << points[i].get() << "; ";
 			cout << endl;
 		}
 	}
@@ -73,7 +73,7 @@ public:
 	{
 		float tmp = 0;
 		for(int i = 0; i < N; i++)
-			tmp += points[i] * subjects[i].discipline_weight();
+			tmp += points[i].get() * subjects[i].discipline_weight();
 		return tmp;
 	}
 
@@ -96,6 +96,7 @@ private:
 
 	class Discipline
 	{
+
 	public:
 
 		float discipline_weight()							//вес предмета в рейтинге
@@ -120,7 +121,29 @@ private:
 		int hours;											//часы в неделю
 	};
 
+	/*
 	int points[N];											//баллы по предметам
+	*/
+	class Point
+	{
+
+	public:
+
+		int get()									//получить балл по индексу
+		{
+			return point;
+		}
+
+		void read(int val)						//записать балл по индексу
+		{
+			point = val;
+		}
+
+	private:
+		int point;
+	};
+
+	Point points[N];
 	Discipline subjects[N];									//указатель на массив объектов-предмет
 };
 
