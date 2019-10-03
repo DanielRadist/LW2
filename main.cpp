@@ -12,48 +12,72 @@
 
 using namespace std;
 
+class Discipline
+{
+public:
+
+	float discipline_weight()							//вес предмета в рейтинге
+	{
+		return (float(hours * complexity) / 80);
+	}
+
+	void init(int complexity, int hours)				//инициализация передмета
+	{
+		this->complexity = complexity;
+		this->hours = hours;
+	}
+
+	void read()											//ввод часов и коэф
+	{
+		do {
+			cout << " ~ Enter complexity: ";
+			cin >> complexity;
+		} while(complexity > 10 || complexity < 1);
+
+		do {
+			cout << " ~ Enter hours: ";
+			cin >> hours;
+		} while(hours < 0);
+	}
+
+	void display()										//вывод информации по предмету
+	{
+		cout << "complexity: " << complexity << "; hours: " << hours << "; ";
+	}
+
+private:
+
+	int complexity;										//трудоемкость предмета (коэффициент 1-10)
+	int hours;											//часы в неделю
+};
+
+
 class Student
 {
 
 public:	
 	#define N 3												//кол-во предметов у ученика
 
-	Student()
-	{
-		init();
-	}
-	~Student()
-	{
-
-	}
-
-	void init()												//инициал. ученика
+	void read()												//ввод ученика
 	{
 		for(int i = 0; i < N; i++)
 		{
-			int hours;										//часы в неделю
-			int complexity;									//трудоемкость предмета (коэффициент 1-10)
 			int point;										//балл
 
 			cout << "Subject #" << i + 1 << endl;
-			do {
-				cout << " ~ Enter complexity: ";
-				cin >> complexity;
-			} while(complexity > 10 || complexity < 1);
-
-			do {
-				cout << " ~ Enter hours: ";
-				cin >> hours;
-			} while(hours < 0);
-
-			subjects[i].init(complexity, hours);
-
 			do {
 				cout << " ~ Enter point: ";
 				cin >> point;
 			} while(point < 0);
 			points[i] = point;
 		}
+	}
+
+	void init(int in_point0, int in_point1, int in_point2)	//инициал. ученика
+	{
+		points[0] = in_point0;
+		points[1] = in_point1;
+		points[2] = in_point2;
 	}
 
 	void display()											//вывод инф. по ученику
@@ -92,41 +116,21 @@ public:
 		return tmp_p;
 	}
 
+
+	Discipline subjects[N];									//указатель на массив объектов-предмет
+
 private:
 
-	class Discipline
-	{
-	public:
-
-		float discipline_weight()							//вес предмета в рейтинге
-		{
-			return (float(hours * complexity) / 80);
-		}
-
-		void init(int complexity, int hours)				//инициализация передмета
-		{
-			this->complexity = complexity;
-			this->hours = hours;
-		}
-
-		void display()										//вывод информации по предмету
-		{
-			cout << "complexity: " << complexity << "; hours: " << hours << "; ";
-		}
-
-	private:
-
-		int complexity;										//трудоемкость предмета (коэффициент 1-10)
-		int hours;											//часы в неделю
-	};
-
 	int points[N];											//баллы по предметам
-	Discipline subjects[N];									//указатель на массив объектов-предмет
 };
 
 int main()
 {
 	Student Oleg;
+	Oleg.init(50, 67, 80);
+	Oleg.subjects[0].init(4, 5);
+	Oleg.subjects[1].init(7, 9);
+	Oleg.subjects[2].read();
 	Oleg.display();
 
 	cout << "Student rating: " << Oleg.status() << "; the heaviest subject: " << Oleg.max_discipline_weight() + 1 << "; " << endl;
