@@ -11,6 +11,98 @@
 
 using namespace std;
 
+
+class Food											//класс вкус
+{
+	#define N 50
+public:
+
+	void read()										//иниц. еды
+	{
+		cin.clear();
+		cout << " ~ Enter name food: ";
+		cin.getline(name, N);
+
+		do {
+			cout << " ~  ~ Enter taste: ";
+			cin >> taste;
+		} while(taste < 1 || taste > 10);
+
+		do {
+			cout << " ~  ~ Enter appearance: ";
+			cin >> appearance;
+		} while(appearance < 1 || appearance > 10);
+
+		do {
+			cout << " ~  ~ Enter satiety: ";
+			cin >> satiety;
+		} while(satiety < 1 || satiety > 10);
+
+		while(cin.get() != '\n');
+
+		salt = 1;
+	}
+
+	void init(char s[], int in_taste, int in_appearance, int in_satiety)
+	{
+		for(int i = 0; s[i] != '\0'; i++)
+			name[i] = s[i];
+
+			taste = in_taste;
+			appearance = in_appearance;
+			satiety = in_satiety;
+	}
+
+	void display()									//вывод еды
+	{
+		cout << " ~ Food: " << name << endl;
+		cout << " ~  ~ taste: " << taste << endl;
+		cout << " ~  ~ appearance: " << appearance << endl;
+		cout << " ~  ~ satiety: " << satiety << endl;
+		cout << " ~  ~ salt: " << salt << endl;
+	}
+
+	void toSalt()									//"сложная" технология соления
+	{
+		salt++;
+		if(salt > 10)
+		{
+			salt = 10;
+		} else if(salt > 4)
+		{
+			taste = taste / 2;
+		}
+	}
+
+	int getTaste()
+	{
+		return taste;
+	}
+
+	int getAppearance()
+	{
+		return appearance;
+	}
+
+	int getSatiety()
+	{
+		return satiety;
+	}
+
+	int getSalt()
+	{
+		return salt;
+	}
+private:
+
+	char name[N];									//имя еды
+	int taste;										//вкус
+	int appearance;									//внешний вид
+	int satiety;									//сытность
+	int salt;										//солёность
+
+};
+
 class Dish
 {
 public:
@@ -23,21 +115,23 @@ public:
 
 		foods = new Food[size];
 		size_dish = size;
-		init();
 	}
 	~Dish()
 	{
 		delete [] foods;
 	}
 
-	void init()											//иниц. блюда
+	void init(char s[])
+	{
+		for(int i = 0; s[i] != '\0'; i++)
+			name[i] = s[i];
+	}
+
+	void read()											//иниц. блюда
 	{
 		cin.clear();
 		cout << "Enter name dish: ";
 		cin.getline(name, N);
-
-		for(int i = 0; i < size_dish; i++)
-			foods[i].init();
 	}
 
 	void display()										//вывод имени блюда и вызов дисплея еды
@@ -84,86 +178,6 @@ public:
 	}
 
 private:
-
-	class Food											//класс вкус
-	{
-	public:
-
-		void init()										//иниц. еды
-		{
-			cin.clear();
-			cout << " ~ Enter name food: ";
-			cin.getline(name, N);
-
-			do {
-				cout << " ~  ~ Enter taste: ";
-				cin >> taste;
-			} while(taste < 1 || taste > 10);
-
-			do {
-				cout << " ~  ~ Enter appearance: ";
-				cin >> appearance;
-			} while(appearance < 1 || appearance > 10);
-
-			do {
-				cout << " ~  ~ Enter satiety: ";
-				cin >> satiety;
-			} while(satiety < 1 || satiety > 10);
-
-			while(cin.get() != '\n');
-
-			salt = 1;
-		}
-
-		void display()									//вывод еды
-		{
-			cout << " ~ Food: " << name << endl;
-			cout << " ~  ~ taste: " << taste << endl;
-			cout << " ~  ~ appearance: " << appearance << endl;
-			cout << " ~  ~ satiety: " << satiety << endl;
-			cout << " ~  ~ salt: " << salt << endl;
-		}
-
-		void toSalt()									//"сложная" технология соления
-		{
-			salt++;
-			if(salt > 10)
-			{
-				salt = 10;
-			} else if(salt > 4)
-			{
-				taste = taste / 2;
-			}
-		}
-
-		int getTaste()
-		{
-			return taste;
-		}
-
-		int getAppearance()
-		{
-			return appearance;
-		}
-
-		int getSatiety()
-		{
-			return satiety;
-		}
-
-		int getSalt()
-		{
-			return salt;
-		}
-	private:
-
-		char name[N];									//имя еды
-		int taste;										//вкус
-		int appearance;									//внешний вид
-		int satiety;									//сытность
-		int salt;										//солёность
-
-	};
 
 	char name[N];										//имя блюда
 	Food *foods;
