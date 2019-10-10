@@ -1,4 +1,4 @@
-﻿/* @autor Rakhmanin Danila aka Radist AltSTU PI-82
+/* @autor Rakhmanin Danila aka Radist AltSTU PI-82
  *
  * Предмет имеет целое – число часов в неделю и целое – трудоемкость предмета (коэффициент 1-10).
  * Определить метод, вычисляющий вес предмета в рейтинге учащегося, равный число часов/8 * трудоемкость/10.
@@ -12,23 +12,81 @@
 
 using namespace std;
 
+class Discipline
+{
+
+public:
+
+	float discipline_weight()							//вес предмета в рейтинге
+	{
+		return (float(hours * complexity) / 80);
+	}
+
+	void init(int complexity, int hours)				//инициализация передмета
+	{
+		this->complexity = complexity;
+		this->hours = hours;
+	}
+
+	void display()										//вывод информации по предмету
+	{
+		cout << "complexity: " << complexity << "; hours: " << hours << "; ";
+	}
+
+private:
+
+	int complexity;										//трудоемкость предмета (коэффициент 1-10)
+	int hours;											//часы в неделю
+};
+
+class Point
+{
+
+public:
+
+	int get()											//получить балл по индексу
+	{
+		return point;
+	}
+
+	void read(int val)									//записать балл по индексу
+	{
+		point = val;
+	}
+
+private:
+	int point;
+};
+
+
 class Student
 {
 
 public:	
-	#define N 3												//кол-во предметов у ученика
 	#define M 50
 
-	Student()
+	Student(int NumberSubjects = 3)
 	{
-		init();
+		this->N = NumberSubjects;
+		points = new Point[N];
+		subjects = new Discipline[N];
 	}
 	~Student()
 	{
-
+		delete [] points;
+		delete [] subjects;
 	}
 
-	void init()												//инициал. ученика
+	void init(char s[])
+	{
+		for(int i = 0; i < M; i++)
+		{
+			name[i] = s[i];
+			if(name[i] == '\0') break;
+		}
+	}
+
+	void read()												//инициал. ученика
 	{
 		cout << "Enter name student: ";
 		cin.getline(name, M);
@@ -101,65 +159,27 @@ public:
 		return tmp_p;
 	}
 
+	Point *points;
+	Discipline *subjects;									//указатель на массив объектов-предмет
+
 private:
 
-	class Discipline
-	{
-
-	public:
-
-		float discipline_weight()							//вес предмета в рейтинге
-		{
-			return (float(hours * complexity) / 80);
-		}
-
-		void init(int complexity, int hours)				//инициализация передмета
-		{
-			this->complexity = complexity;
-			this->hours = hours;
-		}
-
-		void display()										//вывод информации по предмету
-		{
-			cout << "complexity: " << complexity << "; hours: " << hours << "; ";
-		}
-
-	private:
-
-		int complexity;										//трудоемкость предмета (коэффициент 1-10)
-		int hours;											//часы в неделю
-	};
-
-	/*
-	int points[N];											//баллы по предметам
-	*/
-	class Point
-	{
-
-	public:
-
-		int get()											//получить балл по индексу
-		{
-			return point;
-		}
-
-		void read(int val)									//записать балл по индексу
-		{
-			point = val;
-		}
-
-	private:
-		int point;
-	};
-
 	char name[M];
-	Point points[N];
-	Discipline subjects[N];									//указатель на массив объектов-предмет
+	int N;
 };
 
 int main()
 {
-	Student Oleg;
+	Student Oleg(2);
+	Oleg.init("123");
+	Oleg.points[0].read(75);
+	Oleg.points[1].read(55);
+
+	Oleg.display();
+
+	Oleg.subjects[0].init(5, 17);
+	Oleg.subjects[1].init(4, 15);
+
 	Oleg.display();
 
 	cout << "Student rating: " << Oleg.status() << "; the heaviest subject: " << Oleg.max_discipline_weight() + 1 << "; " << endl;
