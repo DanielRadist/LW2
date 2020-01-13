@@ -1,4 +1,4 @@
-/* @autor Rakhmanin Danila aka Radist AltSTU PI-82
+﻿/* @autor Rakhmanin Danila aka Radist AltSTU PI-82
  *
  * Предмет имеет целое – число часов в неделю и целое – трудоемкость предмета (коэффициент 1-10).
  * Определить метод, вычисляющий вес предмета в рейтинге учащегося, равный число часов/8 * трудоемкость/10.
@@ -8,7 +8,13 @@
  *
  */
 
+/* LW13 18. В производном классе - предмет с ЕГЭ, имеется целое поле - признак ЕГЭ.
+ * Если значение признака равно 0 - трудоемкость считается обычно, если 1 - трудоемкость удваивается.
+ * Метод основного класса вычисляет средний рейтинг ученика.
+ */
+
 #include <iostream>
+#include <windows.h>
 
 using namespace std;
 
@@ -22,6 +28,29 @@ public:
 		return (float(hours * complexity) / 80);
 	}
 
+	Discipline(int complexity, int hours)
+	{
+		init(complexity, hours);
+	}
+	Discipline()
+	{
+		cout << "Discipline:" << endl;
+		read();
+	}
+
+	void read()
+	{
+		do {
+			cout << " ~ Enter complexity: ";
+			cin >> complexity;
+		} while(complexity > 10 || complexity < 1);
+
+		do {
+			cout << " ~ Enter hours: ";
+			cin >> hours;
+		} while(hours < 0);
+	}
+
 	void init(int complexity, int hours)				//инициализация передмета
 	{
 		this->complexity = complexity;
@@ -30,13 +59,46 @@ public:
 
 	void display()										//вывод информации по предмету
 	{
-		cout << "complexity: " << complexity << "; hours: " << hours << "; ";
+		cout << " ~ complexity: " << complexity << "; hours: " << hours << "; ";
+		cout << "discipline_weight = " << discipline_weight() << endl;
 	}
 
-private:
+protected:
 
 	int complexity;										//трудоемкость предмета (коэффициент 1-10)
 	int hours;											//часы в неделю
+};
+
+class DisciplinePlusIGE : public Discipline
+{
+private:
+	int data;											//признак	0 или 1
+
+public:
+
+	DisciplinePlusIGE(int data, int complexity, int hours) : Discipline(complexity, hours)
+	{
+		this->data = data;
+	}
+	DisciplinePlusIGE() : Discipline()
+	{
+		cout << "Discipline + EGE: " << endl;
+		do {
+			cout << " ~ Enter data: ";
+			cin >> data;
+		} while(data < 0 || data > 1);
+	}
+
+	void display()
+	{
+		cout << " ~ complexity: " << complexity << "; hours: " << hours << "; data: " << data << "; ";
+		cout << "discipline_weight + ige = " << discipline_weight() << endl;
+	}
+
+	float discipline_weight()
+	{
+		return (float(hours * complexity * (1 + this->data)) / 80);
+	}
 };
 
 class Point
@@ -59,20 +121,30 @@ private:
 };
 
 
+/*
 class Student
 {
 
 public:	
 	#define M 50
 
-	Student(int NumberSubjects = 3)
+	Student(int NumberSubjects)
 	{
 		this->N = NumberSubjects;
 		points = new Point[N];
 		subjects = new Discipline[N];
 	}
+
+	Student()
+	{
+		points = new Point;
+		subjects = new Discipline;
+		EGE = new DisciplinePlusIGE;
+	}
+
 	~Student()
 	{
+		delete [] EGE;
 		delete [] points;
 		delete [] subjects;
 	}
@@ -161,6 +233,7 @@ public:
 
 	Point *points;
 	Discipline *subjects;									//указатель на массив объектов-предмет
+	DisciplinePlusIGE *EGE;
 
 private:
 
@@ -168,8 +241,34 @@ private:
 	int N;
 };
 
+*/
+
+class Graduate
+{
+public:
+	Graduate()
+	{
+		discipline = new Discipline();
+		ige = new DisciplinePlusIGE();
+	}
+
+	void status()
+	{
+		cout << "Student:" << endl;
+		cout << "Discipline: " << endl;
+		discipline->display();
+		cout << "Discipline + EGE: " << endl;
+		ige->display();
+	}
+
+private:
+	Discipline *discipline;
+	DisciplinePlusIGE *ige;
+};
+
 int main()
 {
+	/*
 	Student Oleg(2);
 	Oleg.init("123");
 	Oleg.points[0].read(75);
@@ -183,7 +282,11 @@ int main()
 	Oleg.display();
 
 	cout << "Student rating: " << Oleg.status() << "; the heaviest subject: " << Oleg.max_discipline_weight() + 1 << "; " << endl;
+	*/
 
+	Graduate Igor;
+
+	Igor.status();
 
 	return 0;
 }
